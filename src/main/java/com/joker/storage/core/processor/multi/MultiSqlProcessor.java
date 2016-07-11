@@ -5,7 +5,7 @@
  *
  * @author zhonghua@weidian.com
  */
-package com.vdian.vdds.engine.processor;
+package com.joker.storage.core.processor.multi;
 
 import com.alibaba.cobar.parser.ast.stmt.SQLStatement;
 import com.vdian.vdds.engine.executor.Session;

@@ -15,6 +15,7 @@ public class BinaryPacket {
     public void read(ByteBuffer buffer) {
         if(data == null) {
             if(buffer.remaining()<4) {
+
                 log.error("buffer is small");
                 return;
             } else {
@@ -25,11 +26,11 @@ public class BinaryPacket {
             }
         }
 
-
-                System.arraycopy(buffer.array(), buffer.position(), data.array(), data.position(), length+4);
-                BufferUtil.move(buffer, length + 4);
-                BufferUtil.move(data, length+4);
-        data = BufferUtil.readRemainBytes(buffer);
+//
+//                System.arraycopy(buffer.array(), buffer.position(), data.array(), data.position(), length+4);
+//                BufferUtil.move(buffer, length + 4);
+//                BufferUtil.move(data, length+4);
+//        data = BufferUtil.readRemainBytes(buffer);
     }
 
 

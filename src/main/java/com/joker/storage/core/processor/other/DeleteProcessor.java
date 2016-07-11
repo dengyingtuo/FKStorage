@@ -5,7 +5,7 @@
  *
  * @author zhonghua@weidian.com
  */
-package com.vdian.vdds.engine.processor;
+package com.joker.storage.core.processor.other;
 
 import com.alibaba.cobar.parser.ast.stmt.SQLStatement;
 import com.vdian.vdds.engine.executor.Session;
@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>功能描述：处理Replace命令</p>
+ * <p>功能描述：处理删除命令</p>
  */
-public class ReplaceProcessor extends BaseProcessor{
-    public ReplaceProcessor(SQLStatement sqlStatement, Map<Integer, Parameter> parameterMap, DistributedConnection conn) {
+public class DeleteProcessor extends BaseProcessor{
+    public DeleteProcessor(SQLStatement sqlStatement, Map<Integer, Parameter> parameterMap, DistributedConnection conn) {
         super(sqlStatement, parameterMap, conn);
     }
 

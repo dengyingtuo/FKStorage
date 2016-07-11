@@ -5,7 +5,7 @@
  *
  * @author zhonghua@weidian.com
  */
-package com.vdian.vdds.engine.processor;
+package com.joker.storage.core.processor.other;
 
 import com.alibaba.cobar.parser.ast.stmt.SQLStatement;
 import com.vdian.vdds.engine.executor.Session;
@@ -24,10 +24,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>功能描述：处理insert命令</p>
+ * <p>功能描述：处理update命令</p>
  */
-public class InsertProcessor extends BaseProcessor {
-    public InsertProcessor(SQLStatement sqlStatement, Map<Integer, Parameter> parameterMap, DistributedConnection conn) {
+public class UpdateProcessor extends BaseProcessor{
+
+    public UpdateProcessor(SQLStatement sqlStatement, Map<Integer, Parameter> parameterMap, DistributedConnection conn) {
         super(sqlStatement, parameterMap, conn);
     }
 
