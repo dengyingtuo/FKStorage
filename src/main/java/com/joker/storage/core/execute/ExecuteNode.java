@@ -1,8 +1,16 @@
 package com.joker.storage.core.execute;
 
-/**
- * @Author joker
- * @Date 16/7/11.
- */
+import java.sql.ResultSet;
+
 public class ExecuteNode {
+
+
+    private ResultSet rs;
+    private int updateCount;
+    private long insertId;
+
+
+    public ResultSet getRs() { return rs; }
+    public int getUpdateCount() { return updateCount; }
+    public long getInsertId() { return insertId; }
 }

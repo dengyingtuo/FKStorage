@@ -2,19 +2,12 @@ package com.joker.storage.core.processor.multi;
 
 
 import com.joker.storage.core.processor.Processor;
-import com.joker.storage.core.resultset.MultiResultSet;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 
-public class MultiSqlProcessor implements Processor {
-    private List<Processor> processors = new ArrayList<Processor>();
-    public void  addProcessor(Processor processor) {
-        processors.add(processor);
-    }
+public class BatchProcessor implements Processor {
 
     @Override
     public void execute() throws SQLException {
