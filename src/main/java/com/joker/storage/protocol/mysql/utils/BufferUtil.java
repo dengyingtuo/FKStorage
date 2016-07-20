@@ -19,21 +19,23 @@ public class BufferUtil {
 
     public static void writeUB2(ByteBuffer buffer, long i) {
         buffer.put((byte) (i & 0xff));
-        buffer.put((byte) (i >>> 8));
+        buffer.put((byte) (i >> 8));
     }
     public static long readUB2(ByteBuffer buffer) {
-        long i = buffer.get() & 0xff;
+        long i = 0;
+        i |= (buffer.get() & 0xff) << 0;
         i |= (buffer.get() & 0xff) << 8;
         return i;
     }
 
     public static void writeUB3(ByteBuffer buffer, long i) {
         buffer.put((byte) (i & 0xff));
-        buffer.put((byte) (i >>> 8));
-        buffer.put((byte) (i >>> 16));
+        buffer.put((byte) (i >> 8));
+        buffer.put((byte) (i >> 16));
     }
     public static long readUB3(ByteBuffer buffer) {
-        long i = buffer.get() & 0xff;
+        long i = 0;
+        i |= (buffer.get() & 0xff) << 0;
         i |= (buffer.get() & 0xff) << 8;
         i |= (buffer.get() & 0xff) << 16;
         return i;
@@ -41,15 +43,16 @@ public class BufferUtil {
 
     public static void writeUB4(ByteBuffer buffer, long l) {
         buffer.put((byte) (l & 0xff));
-        buffer.put((byte) (l >>> 8));
-        buffer.put((byte) (l >>> 16));
-        buffer.put((byte) (l >>> 24));
+        buffer.put((byte) (l >> 8));
+        buffer.put((byte) (l >> 16));
+        buffer.put((byte) (l >> 24));
     }
     public static long readUB4(ByteBuffer buffer) {
-        long l = (long) (buffer.get() & 0xff);
-        l |= (long) (buffer.get() & 0xff) << 8;
-        l |= (long) (buffer.get() & 0xff) << 16;
-        l |= (long) (buffer.get() & 0xff) << 24;
+        long l = 0;
+        l |= (buffer.get() & 0xff) << 0;
+        l |= (buffer.get() & 0xff) << 8;
+        l |= (buffer.get() & 0xff) << 16;
+        l |= (buffer.get() & 0xff) << 24;
         return l;
     }
 
@@ -63,22 +66,24 @@ public class BufferUtil {
 
     public static void writeShort(ByteBuffer buffer, short i) {
         buffer.put((byte) (i & 0xff));
-        buffer.put((byte) (i >>> 8));
+        buffer.put((byte) (i >> 8));
     }
     public static short readShort(ByteBuffer buffer) {
-         short i = (short) (buffer.get() & 0xff);
+         short i = 0;
+         i |= (buffer.get() & 0xff) << 0;
          i |= (buffer.get() & 0xff) << 8;
          return i;
     }
 
     public static void writeInt(ByteBuffer buffer, int i) {
         buffer.put((byte) (i & 0xff));
-        buffer.put((byte) (i >>> 8));
-        buffer.put((byte) (i >>> 16));
-        buffer.put((byte) (i >>> 24));
+        buffer.put((byte) (i >> 8));
+        buffer.put((byte) (i >> 16));
+        buffer.put((byte) (i >> 24));
     }
     public static int readInt(ByteBuffer buffer) {
-        int i = buffer.get() & 0xff;
+        int i = 0;
+        i |= (buffer.get() & 0xff) << 0;
         i |= (buffer.get() & 0xff) << 8;
         i |= (buffer.get() & 0xff) << 16;
         i |= (buffer.get() & 0xff) << 24;
@@ -87,16 +92,17 @@ public class BufferUtil {
 
     public static void writeLong(ByteBuffer buffer, long l) {
         buffer.put((byte) (l & 0xff));
-        buffer.put((byte) (l >>> 8));
-        buffer.put((byte) (l >>> 16));
-        buffer.put((byte) (l >>> 24));
-        buffer.put((byte) (l >>> 32));
-        buffer.put((byte) (l >>> 40));
-        buffer.put((byte) (l >>> 48));
-        buffer.put((byte) (l >>> 56));
+        buffer.put((byte) (l >> 8));
+        buffer.put((byte) (l >> 16));
+        buffer.put((byte) (l >> 24));
+        buffer.put((byte) (l >> 32));
+        buffer.put((byte) (l >> 40));
+        buffer.put((byte) (l >> 48));
+        buffer.put((byte) (l >> 56));
     }
     public static long readLong(ByteBuffer buffer) {
-        long l = (long) (buffer.get() & 0xff);
+        long l = 0;
+        l |= (long) (buffer.get() & 0xff) << 0;
         l |= (long) (buffer.get() & 0xff) << 8;
         l |= (long) (buffer.get() & 0xff) << 16;
         l |= (long) (buffer.get() & 0xff) << 24;
@@ -107,27 +113,14 @@ public class BufferUtil {
         return l;
     }
 
-    public static void writeFloat(ByteBuffer buffer, float f) {
-        writeInt(buffer, Float.floatToIntBits(f));
-    }
-    public static float readFloat(ByteBuffer buffer) {
-        return Float.intBitsToFloat(readInt(buffer));
-    }
-
-    public static void writeDouble(ByteBuffer buffer, double d) {
-        writeLong(buffer, Double.doubleToLongBits(d));
-    }
-    public static double readDouble(ByteBuffer buffer) {
-        return Double.longBitsToDouble(readLong(buffer));
-    }
+    public static void writeFloat(ByteBuffer buffer, float f) { writeInt(buffer, Float.floatToIntBits(f)); }
+    public static float readFloat(ByteBuffer buffer) { return Float.intBitsToFloat(readInt(buffer)); }
+    public static void writeDouble(ByteBuffer buffer, double d) { writeLong(buffer, Double.doubleToLongBits(d)); }
+    public static double readDouble(ByteBuffer buffer) { return Double.longBitsToDouble(readLong(buffer)); }
 
 
-
-
-    public static void writeBinaryByte(ByteBuffer buffer, byte[] src) { buffer.put(src); }
-
-    public static void writeWithNull(ByteBuffer buffer, byte[] src) { buffer.put(src); buffer.put((byte) 0); }
-
+    public static void writeBinaryByte(ByteBuffer buffer, byte[] src)   { buffer.put(src); }
+    public static void writeWithNull(ByteBuffer buffer, byte[] src)     { buffer.put(src); buffer.put((byte) 0); }
     public static void writeWithLength(ByteBuffer buffer, byte[] src) {
         if(src==null) {
             buffer.put(NULL_MARK);
@@ -252,17 +245,11 @@ public class BufferUtil {
         return bytes==null ? null : new String(bytes, charset);
     }
 
-
-
-
-    private static ThreadLocal<Calendar> localCalendar = new ThreadLocal<Calendar>();
-    public static Calendar getLocalCalendar() {
-        Calendar cal = localCalendar.get();
-        if (cal == null) {
-            cal = Calendar.getInstance();
-            localCalendar.set(cal);
-        }
-        return cal;
+    public static byte[] readBytes(ByteBuffer buffer, int length) {
+        byte[] ab = new byte[length];
+        System.arraycopy(buffer.array(), buffer.position(), ab, 0, length);
+        buffer.position(buffer.position()+length);
+        return ab;
     }
 
     /* 检查WriteBuffer容量，不够则写出当前缓存块并申请新的缓存块 */
@@ -276,14 +263,6 @@ public class BufferUtil {
         }
     }
 
-    public static byte[] readBytes(ByteBuffer buffer, int length) {
-        byte[] ab = new byte[length];
-        System.arraycopy(buffer.array(), buffer.position(), ab, 0, length);
-        buffer.position(buffer.position()+length);
-        return ab;
-    }
 
-    public static void move(ByteBuffer buffer, int step) {
-        buffer.position(buffer.position() + step);
-    }
+    public static void move(ByteBuffer buffer, int step) { buffer.position(buffer.position() + step); }
 }

@@ -20,7 +20,7 @@ public class TimeValue {
         int minute = (int) BufferUtil.readUB1(buffer);
         int second = (int) BufferUtil.readUB1(buffer);
 
-        Calendar cal = BufferUtil.getLocalCalendar();
+        Calendar cal = Calendar.getInstance();
         cal.set(0, 0, 0, hour, minute, second);
         time = new Time(cal.getTimeInMillis());
     }

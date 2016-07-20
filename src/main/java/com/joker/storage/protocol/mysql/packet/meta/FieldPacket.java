@@ -128,7 +128,7 @@ public class FieldPacket extends BasePacket {
         size += (orgTable == null ? 1 : BufferUtil.getLength(orgTable));
         size += (name == null ? 1 : BufferUtil.getLength(name));
         size += (orgName == null ? 1 : BufferUtil.getLength(orgName));
-        size += 13;// 1+2+4+1+2+1+2
+        size += 13; // 1+2+4+1+2+1+2
         if (definition != null) {
             size += BufferUtil.getLength(definition);
         }

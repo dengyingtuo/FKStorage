@@ -16,10 +16,7 @@
 package com.joker.storage.protocol.mysql.utils;
 
 import java.io.UnsupportedEncodingException;
-
-import com.joker.storage.protocol.mysql.constant.ErrorCode;
-import com.joker.storage.protocol.mysql.packet.BinaryPacket;
-import com.joker.storage.protocol.mysql.packet.server2client.ErrorPacket;
+import java.nio.ByteBuffer;
 import com.joker.storage.protocol.mysql.packet.meta.FieldPacket;
 import com.joker.storage.protocol.mysql.packet.server2client.ResultSetHeaderPacket;
 
@@ -28,13 +25,6 @@ import com.joker.storage.protocol.mysql.packet.server2client.ResultSetHeaderPack
  */
 public class PacketUtil {
     private static final String CODE_PAGE_1252 = "Cp1252";
-
-    public static final ResultSetHeaderPacket getHeader(int fieldCount) {
-        ResultSetHeaderPacket packet = new ResultSetHeaderPacket();
-        packet.packetId = 1;
-        packet.fieldCount = fieldCount;
-        return packet;
-    }
 
     public static byte[] encode(String src, String charset) {
         if (src == null) {
@@ -64,20 +54,11 @@ public class PacketUtil {
         return packet;
     }
 
-    public static final ErrorPacket getShutdown() {
-        ErrorPacket error = new ErrorPacket();
-        error.packetId = 1;
-        error.errno = ErrorCode.ER_SERVER_SHUTDOWN;
-        error.message = "The server has been shutdown".getBytes();
-        return error;
-    }
-
-    public static final FieldPacket getField(BinaryPacket src, String fieldName) {
+    public static final FieldPacket getField(ByteBuffer src, String fieldName) {
         FieldPacket field = new FieldPacket();
         field.read(src);
         field.name = encode(fieldName, CODE_PAGE_1252);
         field.packetLength = field.calcPacketSize();
         return field;
     }
-
 }

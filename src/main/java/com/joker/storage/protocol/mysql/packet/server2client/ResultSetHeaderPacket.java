@@ -16,6 +16,7 @@
 package com.joker.storage.protocol.mysql.packet.server2client;
 
 import java.nio.ByteBuffer;
+import java.sql.SQLException;
 
 import com.joker.storage.protocol.mysql.connection.MysqlConnection;
 import com.joker.storage.protocol.mysql.packet.BasePacket;
@@ -48,6 +49,14 @@ public class ResultSetHeaderPacket extends BasePacket {
 
     public int fieldCount;
     public long extra;
+
+
+    public ResultSetHeaderPacket(byte packetId, int fieldCount, long extra) throws SQLException {
+        this.packetId = packetId;
+        this.fieldCount = fieldCount;
+        this.extra = extra;
+        this.packetLength = calcPacketSize();
+    }
 
     @Override
     public void read(ByteBuffer buffer) {
