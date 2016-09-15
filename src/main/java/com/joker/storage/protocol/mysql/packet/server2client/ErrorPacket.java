@@ -16,8 +16,10 @@
 package com.joker.storage.protocol.mysql.packet.server2client;
 
 import java.nio.ByteBuffer;
+import java.sql.SQLException;
 
 import com.joker.storage.protocol.mysql.connection.MysqlConnection;
+import com.joker.storage.protocol.mysql.constant.ErrorCode;
 import com.joker.storage.protocol.mysql.packet.BasePacket;
 import com.joker.storage.protocol.mysql.utils.BufferUtil;
 
@@ -48,6 +50,20 @@ public class ErrorPacket extends BasePacket {
     public byte mark = SQLSTATE_MARKER;
     public byte[] sqlState = DEFAULT_SQLSTATE;
     public byte[] message;
+
+    public ErrorPacket(byte packetId, int errno,  byte[] sqlState, String msg) throws SQLException {
+        if(sqlState!=null && sqlState.length!=5) {
+            throw new SQLException("sqlState's length is not 5");
+        }
+
+        this.packetId = packetId;
+        this.errno = errno;
+        if(sqlState!=null) {
+            this.sqlState = sqlState;
+        }
+        this.message = msg.getBytes();
+        this.packetLength = calcPacketSize();
+    }
 
     @Override
     public void read(ByteBuffer buffer) {
@@ -92,5 +108,4 @@ public class ErrorPacket extends BasePacket {
     protected String getPacketInfo() {
         return "MySQL Error Packet";
     }
-
 }

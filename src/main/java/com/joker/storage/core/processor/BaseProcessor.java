@@ -1,10 +1,10 @@
 package com.joker.storage.core.processor;
 
 import com.alibaba.cobar.parser.model.SyntaxResult;
-import com.joker.storage.core.model.ExecuteNode;
-import com.joker.storage.core.model.ExecuteSet;
+import com.joker.storage.core.execute.ExecuteNode;
+import com.joker.storage.core.execute.ExecuteSet;
 import com.joker.storage.core.model.SqlNode;
-import com.joker.storage.core.resultset.FKMultiResultSet;
+import com.joker.storage.core.resultset.MultiResultSet;
 import com.joker.storage.route.RouteResult;
 
 import java.sql.ResultSet;
@@ -36,21 +36,16 @@ public abstract class BaseProcessor implements Processor{
 
     @Override
     public ResultSet getResultSet() throws SQLException {
-        if (!isfinished) {
-            throw new SQLException("processor - have not finished");
-        }
-
-        return new FKMultiResultSet(sqlNode);
+        checkFinished();
+        return new MultiResultSet(sqlNode);
     }
 
     @Override
     public int getUpdateCount() throws SQLException {
-        if (!isfinished) {
-            throw new SQLException("processor - have not finished");
-        }
+        checkFinished();
 
         int updateCount = 0;
-        for(ExecuteNode node : sqlNode.getChildrens()) {
+        for(ExecuteNode node : sqlNode.getChildren()) {
             updateCount+=node.getUpdateCount();
         }
         return updateCount;
@@ -58,29 +53,23 @@ public abstract class BaseProcessor implements Processor{
 
     @Override
     public boolean getMoreResults(int current) throws SQLException {
-        if (!isfinished) {
-            throw new SQLException("processor - have not finished");
-        }
+        checkFinished();
 
         return false;
     }
 
     @Override
     public ResultSet getGeneratedKeys() throws SQLException {
-        if (!isfinished) {
-            throw new SQLException("processor - have not finished");
-        }
+        checkFinished();
 
         return null;
     }
 
     @Override
     public int[] getBatchUpdateCounts() throws SQLException {
-        if (!isfinished) {
-            throw new SQLException("processor - have not finished");
-        }
+        checkFinished();
 
-        List<ExecuteNode> children = sqlNode.getChildrens();
+        List<ExecuteNode> children = sqlNode.getChildren();
 
         int[] updateCounts = new int[children.size()];
         for(int i=0; i<children.size(); i++) {
@@ -89,6 +78,11 @@ public abstract class BaseProcessor implements Processor{
         return updateCounts;
     }
 
+    protected void checkFinished() throws SQLException {
+        if (!isfinished) {
+            throw new SQLException("processor - have not finished");
+        }
+    }
 
     @Override
     abstract public boolean isUpdate() throws SQLException;

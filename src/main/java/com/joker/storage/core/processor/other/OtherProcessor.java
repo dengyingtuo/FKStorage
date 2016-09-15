@@ -1,11 +1,11 @@
-package com.joker.storage.core.processor.show;
+package com.joker.storage.core.processor.other;
 
 import com.joker.storage.core.processor.BaseProcessor;
 
 import java.sql.SQLException;
 
-public class ShowTablesProcessor extends BaseProcessor {
 
+public class OtherProcessor extends BaseProcessor {
     @Override
     public boolean isUpdate() throws SQLException {
         return false;

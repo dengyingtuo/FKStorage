@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 .idea
 *.iml
+=======
+*.iml
+.idea/
+>>>>>>> f95df2a922156074efbfc3c7f9da4e9874186a14

@@ -1,24 +1,23 @@
-package com.joker.storage.core.processor.select;
+package com.joker.storage.core.processor.other;
 
 import com.joker.storage.core.processor.BaseProcessor;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SelectProcessor extends BaseProcessor {
-
-
+public class UpdateProcessor extends BaseProcessor {
     @Override
     public boolean isUpdate() {
-        return false;
+        return true;
     }
 
     @Override
-    public int getUpdateCount() throws SQLException {
-        return -1;
+    public ResultSet getResultSet() throws SQLException {
+        return null;
     }
 
     @Override
     public boolean getMoreResults(int current) throws SQLException {
-        return true;
+        return false;
     }
 }

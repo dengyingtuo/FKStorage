@@ -1,82 +1,82 @@
-/**
- * <p>文件描述：</p>
- * <p>版权所有： 版权所有(C)2011-2099</p>
- * <p>公   司： 微店(口袋购物) </p>
- *
- * @author zhonghua@weidian.com
- */
-package com.vdian.vdds.engine.processor;
+package com.joker.storage.core.processor;
 
 import com.alibaba.cobar.parser.ast.stmt.SQLStatement;
 import com.alibaba.cobar.parser.ast.stmt.dal.ShowTables;
-import com.vdian.vdds.common.exception.DdasException;
-import com.vdian.vdds.engine.jdbc.DistributedConnection;
-import com.vdian.vdds.engine.model.Parameter;
-import com.vdian.vdds.engine.model.SqlObject;
-import com.vdian.vdds.engine.model.SqlType;
+import com.joker.storage.core.model.SqlNode;
+import com.joker.storage.core.model.SqlType;
+import com.joker.storage.core.processor.desc.DescTableProcessor;
+import com.joker.storage.core.processor.multi.BatchProcessor;
+import com.joker.storage.core.processor.multi.MultiSqlProcessor;
+import com.joker.storage.core.processor.other.*;
+import com.joker.storage.core.processor.select.SelectProcessor;
+import com.joker.storage.core.processor.select.UnionSelectProcessor;
+import com.joker.storage.core.processor.show.ShowTablesProcessor;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-/**
- * <p>功能描述：根据SqlStatement返回对应的处理器</p>
- */
+
 public class ProcessorFactory {
-    public static Processor makeProcessor(List<SqlObject> sqlObjectList) throws SQLException {
-        if(sqlObjectList==null || sqlObjectList.size()==0) {
-            throw new DdasException("sqlObjectList is empty");
+    public static Processor makeProcessor(List<SqlNode> nodes) throws SQLException {
+        if(nodes==null || nodes.size()==0) {
+            throw new SQLException("sql node list is empty");
         }
 
-        if(sqlObjectList.size()>1) {
-            //batch TODO
-            return null;
+        if(nodes.size()>1) {
+            return new BatchProcessor();
         }
 
-        return makeProcess(sqlObjectList.get(0));
+        return makeProcess(nodes.get(0));
     }
 
-    private static Processor makeProcess(SqlObject sqlObject) throws SQLException {
-        if(sqlObject==null) {
-            throw new DdasException("sqlObject is null");
+    private static Processor makeProcess(SqlNode node) throws SQLException {
+        if(node==null || node.getSqlStatements()==null || node.getSqlStatements().size()<=0) {
+            throw new SQLException("sql node is null");
         }
 
-        if(sqlObject.getSqlStatements().size()>1) {
-            List<Processor> processors = new ArrayList<Processor>();
-            for(SQLStatement sqlStatement : sqlObject.getSqlStatements()) {
-                processors.add(makeProcess(sqlStatement, sqlObject.getParameterMap(), sqlObject.getConn()));
+        if(node.getSqlStatements().size()>1) {
+            MultiSqlProcessor processor = new MultiSqlProcessor();
+
+            for(SQLStatement sqlStatement : node.getSqlStatements()) {
+                processor.addProcessor(makeProcess(sqlStatement));
             }
 
-            return new MultiSqlProcessor(processors, sqlObject.getConn());
+            return processor;
         }
 
-        return makeProcess(sqlObject.getSqlStatement(), sqlObject.getParameterMap(), sqlObject.getConn());
+        return makeProcess(node.getSqlStatements().get(0));
     }
 
-    private static Processor makeProcess(SQLStatement sqlStatement, Map<Integer, Parameter> parameterMap, DistributedConnection conn) throws SQLException {
+    private static Processor makeProcess(SQLStatement sqlStatement) throws SQLException {
         SqlType sqlType = SqlType.valueOfSQLStatement(sqlStatement);
         switch (sqlType) {
 			case INSERT:
-                return new InsertProcessor(sqlStatement, parameterMap, conn);
+                return new InsertProcessor();
 
 			case SELECT:
-                return new SelectProcessor(sqlStatement, parameterMap, conn);
+                return new SelectProcessor();
 
 			case UPDATE:
-                return new UpdateProcessor(sqlStatement, parameterMap, conn);
+                return new UpdateProcessor();
 
 			case DELETE:
-                return new DeleteProcessor(sqlStatement, parameterMap, conn);
+                return new DeleteProcessor();
 
 			case REPLACE:
-                return new ReplaceProcessor(sqlStatement, parameterMap, conn);
+                return new ReplaceProcessor();
 
 			case SHOW:
-                return makeShowProcess(sqlStatement, parameterMap, conn);
+                return makeShowProcess(sqlStatement);
 
             case DESC:
-                return new DescTableProcessor(sqlStatement, parameterMap, conn);
+                return new DescTableProcessor();
+
+            case UNION_SELECT:
+                return new UnionSelectProcessor();
+
+            case OTHER:
+                return new OtherProcessor();
 
             default:
                 throw new SQLException("Unknonw sql type:" + sqlType.toString());
@@ -84,9 +84,9 @@ public class ProcessorFactory {
         }
     }
 
-    private static Processor makeShowProcess(SQLStatement sqlStatement, Map<Integer, Parameter> parameterMap, DistributedConnection conn) throws SQLException {
+    private static Processor makeShowProcess(SQLStatement sqlStatement) throws SQLException {
         if(sqlStatement instanceof ShowTables) {
-            return new ShowTablesProcessor(sqlStatement, parameterMap, conn);
+            return new ShowTablesProcessor();
         }
 
         throw new SQLException("unSupport show sql:" + sqlStatement.getClass().getName());

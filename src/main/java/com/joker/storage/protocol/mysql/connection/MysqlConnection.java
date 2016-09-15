@@ -10,7 +10,7 @@ import java.util.concurrent.BlockingQueue;
 
 /* 能区分一个mysql包 */
 public abstract class MysqlConnection extends AsyncConnection {
-    private BlockingQueue<BinaryPacket>
+//    private BlockingQueue<BinaryPacket>
 
 
     public MysqlConnection(NIOProcessor processor, long id, SocketChannel channel) {

@@ -21,14 +21,14 @@ public class DateValue {
 
         if (length == 11) {
             long nanos = BufferUtil.readUB4(buffer);
-            Calendar cal = BufferUtil.getLocalCalendar();
+            Calendar cal = Calendar.getInstance();
             cal.set(year, --month, date, hour, minute, second);
             Timestamp time = new Timestamp(cal.getTimeInMillis());
             time.setNanos((int) nanos);
 
             this.date = time;
         } else {
-            Calendar cal = BufferUtil.getLocalCalendar();
+            Calendar cal = Calendar.getInstance();
             cal.set(year, --month, date, hour, minute, second);
             this.date = new Date(cal.getTimeInMillis());
         }
